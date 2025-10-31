@@ -10,6 +10,7 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "bundler",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": ["vite-plugin-pwa/client", "vite-plugin-pwa/info"]
   }
 }

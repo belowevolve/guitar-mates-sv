@@ -11,17 +11,8 @@ export default defineConfig({
     devtoolsJson(),
     SvelteKitPWA({
       registerType: "autoUpdate",
-      injectManifest: {
-        globPatterns: ["client/**/*.{js,css,ico,png,svg,webp,woff,woff2}"],
-      },
-      workbox: {
-        globPatterns: ["client/**/*.{js,css,ico,png,svg,webp,woff,woff2}"],
-      },
       devOptions: {
         enabled: true,
-        suppressWarnings: true,
-        type: "module",
-        navigateFallback: "/",
       },
     }),
   ],

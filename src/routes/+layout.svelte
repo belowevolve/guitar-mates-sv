@@ -9,9 +9,6 @@
       const { registerSW } = await import("virtual:pwa-register");
       registerSW({
         immediate: true,
-        onOfflineReady() {
-          console.log("SW is ready to work offline");
-        },
         onRegistered(r) {
           // uncomment following code if you want check for updates
           // r && setInterval(() => {

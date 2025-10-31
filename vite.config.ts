@@ -11,6 +11,9 @@ export default defineConfig({
     devtoolsJson(),
     SvelteKitPWA({
       registerType: "autoUpdate",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,gif,svg,webp}"],
+      },
       devOptions: { enabled: true },
     }),
   ],

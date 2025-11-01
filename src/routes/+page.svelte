@@ -2,14 +2,35 @@
   import { addSong, db } from "$lib/db";
   import { liveQ } from "$lib/db/index.svelte";
 
-  const songs = liveQ(() => db.songs.toArray());
+  let search = $state("");
+  const songs = liveQ(
+    () => db.songs.where("title").startsWithIgnoreCase(search).toArray(),
+    () => [search]
+  );
+
+  let alert = $state<string | null>(null);
+  let firstRender = $state(true);
+  $effect(() => {
+    if (firstRender && songs.isPending) {
+      alert = "1";
+    }
+    if (!firstRender && songs.isPending) {
+      alert = "2";
+    }
+  });
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a>to read the
-  documentation
-</p>
+<button
+  onclick={() => {
+  firstRender = false;
+}}
+>
+  Click me
+</button>
+
+{JSON.stringify(alert)}
+<input type="text" bind:value={search} placeholder="Search">
+{search}
 <form
   method="POST"
   onsubmit={(e) => {

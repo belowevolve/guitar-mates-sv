@@ -1,48 +1,54 @@
 <script lang="ts">
-  import { addSong, db } from "$lib/db";
-  import { liveQ } from "$lib/db/index.svelte";
+	import { Button } from '$lib/ui/button';
+	import { addSong, db, deleteSong } from '$lib/db';
+	import { liveQ } from '$lib/db/index.svelte';
 
-  let search = $state("");
-  const songs = liveQ(
-    () => db.songs.where("title").startsWithIgnoreCase(search).toArray(),
-    () => [search]
-  );
-
-  let alert = $state<string | null>(null);
-  let firstRender = $state(true);
-  $effect(() => {
-    if (firstRender && songs.isPending) {
-      alert = "1";
-    }
-    if (!firstRender && songs.isPending) {
-      alert = "2";
-    }
-  });
+	let search = $state('');
+	const songs = liveQ(
+		() => db.songs.where('title').startsWithIgnoreCase(search).toArray(),
+		() => [search]
+	);
 </script>
 
-<button
-  onclick={() => {
-  firstRender = false;
-}}
->
-  Click me
-</button>
-
-{JSON.stringify(alert)}
-<input type="text" bind:value={search} placeholder="Search">
+<input type="text" bind:value={search} placeholder="Search" />
 {search}
 <form
-  method="POST"
-  onsubmit={(e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget, e.submitter);
-    const title = formData.get("title") as string;
-    const lyrics = formData.get("lyrics") as string;
-    addSong({ title, lyrics });
-  }}
+	method="POST"
+	onsubmit={(e) => {
+		e.preventDefault();
+		const formData = new FormData(e.currentTarget, e.submitter);
+		const title = formData.get('title') as string;
+		const lyrics = formData.get('lyrics') as string;
+		addSong({ title, lyrics });
+	}}
 >
-  <input type="text" name="title" placeholder="Title">
-  <input type="text" name="lyrics" placeholder="Lyrics">
-  <button type="submit">Add Song</button>
+	<input type="text" name="title" placeholder="Title" />
+	<input type="text" name="lyrics" placeholder="Lyrics" />
+	<Button type="submit">Add Song</Button>
 </form>
-{JSON.stringify(songs.current)}
+
+{#if songs.current && songs.current.length}
+	<div>
+		{#each songs.current as song}
+			<div
+				class="song-card"
+				style="margin: 1em 0; padding: 1em; border: 1px solid #ccc; border-radius: 6px;"
+			>
+				<a
+					href={`/song/${song.id}`}
+					style="font-weight: bold; text-decoration: none; color: inherit;"
+				>
+					{song.title}
+				</a>
+				{#if song.lyrics}
+					<div style="margin-top: 0.5em; color: #666;">
+						{song.lyrics}
+					</div>
+				{/if}
+				<Button variant="destructive" onclick={() => deleteSong(song.id)}>Delete</Button>
+			</div>
+		{/each}
+	</div>
+{:else}
+	<p>No songs found.</p>
+{/if}

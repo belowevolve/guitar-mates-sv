@@ -8,15 +8,19 @@ type QueryResult<T> = {
 
 export function liveQ<T>(
 	querier: () => T | Promise<T>,
-	dependencies: () => unknown[]
+	dependencies: () => unknown[],
+	options?: {
+		initialValue?: T;
+	}
 ): QueryResult<T> {
 	const query = $state<QueryResult<T>>({
-		current: undefined,
+		current: options?.initialValue,
 		isPending: true,
 		isError: false
 	});
 	$effect(() => {
 		dependencies?.();
+		console.log('dependencies', dependencies());
 		return liveQuery(querier).subscribe((result) => {
 			if (result !== undefined) {
 				query.current = result;

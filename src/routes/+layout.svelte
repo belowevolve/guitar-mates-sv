@@ -3,6 +3,7 @@
 	import { pwaInfo } from 'virtual:pwa-info';
 	import { onMount } from 'svelte';
 	import favicon from '$lib/assets/favicon.svg';
+	import ViewTransitions from '$lib/ui/view-transitions.svelte';
 
 	onMount(async () => {
 		if (pwaInfo) {
@@ -33,4 +34,4 @@
 	{@html webManifest}
 </svelte:head>
 
-<main>{@render children()}</main>
+<main><ViewTransitions />{@render children()}</main>

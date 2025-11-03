@@ -83,6 +83,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.14
         version: 4.1.16
+      tailwindcss-view-transitions:
+        specifier: ^0.1.1
+        version: 0.1.1(tailwindcss@4.1.16)
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -2593,6 +2596,11 @@ packages:
     peerDependenciesMeta:
       tailwind-merge:
         optional: true
+
+  tailwindcss-view-transitions@0.1.1:
+    resolution: {integrity: sha512-YIiZAoYDSwcUC6kt/TD7knkOkiDyyQArUN3fgYAvrRIF7zzta7/olQM44z9zeuGRBMSWpkbP1slYH67gEMMIKA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0'
 
   tailwindcss@4.1.16:
     resolution: {integrity: sha512-pONL5awpaQX4LN5eiv7moSiSPd/DLDzKVRJz8Q9PgzmAdd1R4307GQS2ZpfiN7ZmekdQrfhZZiSE5jkLR4WNaA==}
@@ -5503,6 +5511,10 @@ snapshots:
       tailwindcss: 4.1.16
     optionalDependencies:
       tailwind-merge: 3.3.1
+
+  tailwindcss-view-transitions@0.1.1(tailwindcss@4.1.16):
+    dependencies:
+      tailwindcss: 4.1.16
 
   tailwindcss@4.1.16: {}
 

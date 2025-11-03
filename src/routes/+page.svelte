@@ -28,24 +28,19 @@
 	<Button type="submit">Add Song</Button>
 </form>
 
-{#if songs.current && songs.current.length}
-	<div>
-		{#each songs.current as song (song.id)}
-			<Card.Root>
-				<Card.Header>
-					<a href={`/offline-song#${song.id}`}>
-						<Card.Title>{song.title}</Card.Title>
-					</a>
-				</Card.Header>
-				{#if song.lyrics}
-					<div style="margin-top: 0.5em; color: #666;">
-						{song.lyrics}
-					</div>
-				{/if}
-				<Button variant="destructive" onclick={() => deleteSong(song.id)}>Delete</Button>
-			</Card.Root>
-		{/each}
-	</div>
-{:else}
-	<p>No songs found.</p>
-{/if}
+{#each songs.current as song (song.id)}
+	<Card.Root>
+		<Card.Header>
+			<a href={`/offline-song?id=${song.id}`} data-sveltekit-preload-data="hover">
+				<Card.Title style="view-transition-name: song-title-{song.id};">{song.title}</Card.Title>
+			</a>
+		</Card.Header>
+
+		{#if song.lyrics}
+			<div style="margin-top: 0.5em; color: #666;">
+				{song.lyrics}
+			</div>
+		{/if}
+		<Button variant="destructive" onclick={() => deleteSong(song.id)}>Delete</Button>
+	</Card.Root>
+{/each}

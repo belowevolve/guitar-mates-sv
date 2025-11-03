@@ -1,14 +1,7 @@
 <script lang="ts">
-	import { liveQ } from '$lib/db/index.svelte';
-	import { page } from '$app/state';
-	import { db } from '$lib/db';
-
-	const hash = page.url.hash;
-	const id = hash.split('#')[1];
-	const song = liveQ(
-		() => (id ? db.songs.get(id) : undefined),
-		() => [id]
-	);
+	let { data } = $props();
 </script>
 
-{JSON.stringify(song.current)}
+<a href="/">Back</a>
+<h1 style="view-transition-name: song-title-{data.song.id};">{data.song.title}</h1>
+<p>{data.song.lyrics}</p>

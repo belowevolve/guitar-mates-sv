@@ -38,6 +38,7 @@
 		WithElementRef<HTMLAnchorAttributes> & {
 			variant?: ButtonVariant;
 			size?: ButtonSize;
+			external?: boolean;
 		};
 </script>
 
@@ -47,6 +48,7 @@
 		variant = 'default',
 		size = 'default',
 		ref = $bindable(null),
+		external = false,
 		href = undefined,
 		type = 'button',
 		disabled,
@@ -61,6 +63,8 @@
 		data-slot="button"
 		class={buttonVariants({ variant, size, className })}
 		href={disabled ? undefined : href}
+		rel={external ? 'noopener noreferrer' : undefined}
+		target={external ? '_blank' : undefined}
 		aria-disabled={disabled}
 		role={disabled ? 'link' : undefined}
 		tabindex={disabled ? -1 : undefined}

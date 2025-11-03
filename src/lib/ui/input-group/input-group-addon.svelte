@@ -24,7 +24,6 @@
 
 <script lang="ts">
 	import type { WithElementRef } from '$lib/ui';
-	import { cn } from '$lib/ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	let {

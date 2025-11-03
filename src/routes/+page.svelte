@@ -30,7 +30,7 @@
 
 {#if songs.current && songs.current.length}
 	<div>
-		{#each songs.current as song}
+		{#each songs.current as song (song.id)}
 			<Card.Root>
 				<Card.Header>
 					<a href={`/offline-song#${song.id}`}>

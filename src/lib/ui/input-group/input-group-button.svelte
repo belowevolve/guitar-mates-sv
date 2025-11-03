@@ -21,7 +21,6 @@
 </script>
 
 <script lang="ts">
-	import { cn } from '$lib/ui';
 	import type { ComponentProps } from 'svelte';
 	import { Button } from '$lib/ui/button';
 

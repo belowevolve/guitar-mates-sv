@@ -35,7 +35,7 @@
 				style="margin: 1em 0; padding: 1em; border: 1px solid #ccc; border-radius: 6px;"
 			>
 				<a
-					href={`/song/${song.id}`}
+					href={`/offline-song#${song.id}`}
 					style="font-weight: bold; text-decoration: none; color: inherit;"
 				>
 					{song.title}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/ui/button';
+	import * as Card from '$lib/ui/card';
 	import { addSong, db, deleteSong } from '$lib/db';
 	import { liveQ } from '$lib/db/index.svelte';
 
@@ -30,23 +31,19 @@
 {#if songs.current && songs.current.length}
 	<div>
 		{#each songs.current as song}
-			<div
-				class="song-card"
-				style="margin: 1em 0; padding: 1em; border: 1px solid #ccc; border-radius: 6px;"
-			>
-				<a
-					href={`/offline-song#${song.id}`}
-					style="font-weight: bold; text-decoration: none; color: inherit;"
-				>
-					{song.title}
-				</a>
+			<Card.Root>
+				<Card.Header>
+					<a href={`/offline-song#${song.id}`}>
+						<Card.Title>{song.title}</Card.Title>
+					</a>
+				</Card.Header>
 				{#if song.lyrics}
 					<div style="margin-top: 0.5em; color: #666;">
 						{song.lyrics}
 					</div>
 				{/if}
 				<Button variant="destructive" onclick={() => deleteSong(song.id)}>Delete</Button>
-			</div>
+			</Card.Root>
 		{/each}
 	</div>
 {:else}

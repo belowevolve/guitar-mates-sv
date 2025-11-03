@@ -1,3 +1,11 @@
+import { defineConfig } from 'cva';
+import { twMerge } from 'tailwind-merge';
+export type { VariantProps } from 'cva';
+
+export const { cva, cx: cn } = defineConfig({
+	hooks: { onComplete: twMerge }
+});
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

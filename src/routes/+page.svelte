@@ -1,26 +1,30 @@
 <script lang="ts">
+	import { goto, invalidateAll } from '$app/navigation';
+	import { fade, fly } from 'svelte/transition';
+
+	import Footer from './footer.svelte';
+
+	import { addSong, deleteSong } from '$lib/db';
 	import { Button } from '$lib/ui/button';
 	import * as Card from '$lib/ui/card';
-	import { addSong, deleteSong } from '$lib/db';
-	import { goto, invalidateAll } from '$app/navigation';
 
 	let { data } = $props();
 
-	let queryInput = $state(data.query);
+	let q = $state(data.query);
 
 	$effect(() => {
-		if (queryInput === data.query) return;
+		if (q === data.query) return;
 		let timer = setTimeout(() => {
-			goto(queryInput ? `?q=${encodeURIComponent(queryInput)}` : '/', {
-				replaceState: true,
-				keepFocus: true
+			goto(q ? `?q=${encodeURIComponent(q)}` : '/', {
+				keepFocus: true,
+				replaceState: true
 			});
 		}, 250);
 		return () => clearTimeout(timer);
 	});
 
 	async function handleAddSong(title: string, lyrics: string) {
-		await addSong({ title, lyrics });
+		await addSong({ lyrics, title });
 		invalidateAll();
 	}
 
@@ -29,8 +33,6 @@
 		invalidateAll();
 	}
 </script>
-
-<input type="search" name="q" required placeholder="Search" bind:value={queryInput} />
 
 <form
 	method="POST"
@@ -42,24 +44,29 @@
 		handleAddSong(title, lyrics);
 	}}
 >
-	<input type="text" name="title" placeholder="Title" />
-	<input type="text" name="lyrics" placeholder="Lyrics" />
+	<input name="title" placeholder="Title" type="text" />
+	<input name="lyrics" placeholder="Lyrics" type="text" />
 	<Button type="submit">Add Song</Button>
 </form>
+<main class="mb-16">
+	{#each data.songs as song (song.id)}
+		<div in:fade={{ duration: 100 }} out:fly={{ x: -100 }}>
+			<Card.Root>
+				<Card.Header>
+					<a href={`/offline-song?id=${song.id}`}>
+						<Card.Title style="view-transition-name: song-title-{song.id};">{song.title}</Card.Title
+						>
+					</a>
+				</Card.Header>
 
-{#each data.songs as song (song.id)}
-	<Card.Root>
-		<Card.Header>
-			<a href={`/offline-song?id=${song.id}`}>
-				<Card.Title style="view-transition-name: song-title-{song.id};">{song.title}</Card.Title>
-			</a>
-		</Card.Header>
-
-		{#if song.lyrics}
-			<div style="margin-top: 0.5em; color: #666;">
-				{song.lyrics}
-			</div>
-		{/if}
-		<Button variant="destructive" onclick={() => handleDeleteSong(song.id)}>Delete</Button>
-	</Card.Root>
-{/each}
+				{#if song.lyrics}
+					<div style="margin-top: 0.5em; color: #666;">
+						{song.lyrics}
+					</div>
+				{/if}
+				<Button onclick={() => handleDeleteSong(song.id)} variant="destructive">Delete</Button>
+			</Card.Root>
+		</div>
+	{/each}
+</main>
+<Footer {q} />

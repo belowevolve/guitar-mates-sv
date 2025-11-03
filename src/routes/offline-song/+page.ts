@@ -1,6 +1,7 @@
 export const ssr = false;
-import { db } from '$lib/db';
 import { redirect } from '@sveltejs/kit';
+
+import { db } from '$lib/db';
 
 export const load = async ({ url }) => {
 	const id = url.searchParams.get('id');

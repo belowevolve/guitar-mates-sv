@@ -1,19 +1,20 @@
 <script lang="ts">
-	import { Separator } from '$lib/ui/separator/index.js';
-	import { cn } from '$lib/ui';
 	import type { ComponentProps } from 'svelte';
 
+	import { cn } from '$lib/ui';
+	import { Separator } from '$lib/ui/separator/index.js';
+
 	let {
-		ref = $bindable(null),
 		class: className,
+		ref = $bindable(null),
 		...restProps
 	}: ComponentProps<typeof Separator> = $props();
 </script>
 
 <Separator
-	bind:ref
+	class={cn('my-0', className)}
 	data-slot="item-separator"
 	orientation="horizontal"
-	class={cn('my-0', className)}
+	bind:ref
 	{...restProps}
 />

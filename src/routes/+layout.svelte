@@ -1,7 +1,8 @@
 <script lang="ts">
 	import '../app.css';
-	import { pwaInfo } from 'virtual:pwa-info';
 	import { onMount } from 'svelte';
+	import { pwaInfo } from 'virtual:pwa-info';
+
 	import favicon from '$lib/assets/favicon.svg';
 	import ViewTransitions from '$lib/ui/view-transitions.svelte';
 
@@ -30,8 +31,11 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link href={favicon} rel="icon" />
 	{@html webManifest}
 </svelte:head>
 
-<main><ViewTransitions />{@render children()}</main>
+<ViewTransitions />
+<div class="containter-mobile">
+	{@render children()}
+</div>

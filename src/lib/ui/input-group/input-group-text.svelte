@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { WithElementRef } from '$lib/ui';
-	import { cn } from '$lib/ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import type { WithElementRef } from '$lib/ui';
+
+	import { cn } from '$lib/ui';
+
 	let {
-		ref = $bindable(null),
-		class: className,
 		children,
+		class: className,
+		ref = $bindable(null),
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();
 </script>

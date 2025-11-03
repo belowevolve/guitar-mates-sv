@@ -2,12 +2,12 @@ import { liveQuery } from 'dexie';
 
 type QueryResult<T> = {
 	current?: T;
-	isPending: boolean;
 	isError: boolean;
+	isPending: boolean;
 };
 
 export function liveQ<T>(
-	querier: () => T | Promise<T>,
+	querier: () => Promise<T> | T,
 	dependencies: () => unknown[],
 	options?: {
 		initialValue?: T;
@@ -15,8 +15,8 @@ export function liveQ<T>(
 ): QueryResult<T> {
 	const query = $state<QueryResult<T>>({
 		current: options?.initialValue,
-		isPending: true,
-		isError: false
+		isError: false,
+		isPending: true
 	});
 	$effect(() => {
 		dependencies?.();

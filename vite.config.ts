@@ -10,11 +10,11 @@ export default defineConfig({
 		sveltekit(),
 		devtoolsJson(),
 		SvelteKitPWA({
-			registerType: 'autoUpdate',
 			devOptions: {
 				enabled: true,
 				suppressWarnings: true
-			}
+			},
+			registerType: 'autoUpdate'
 		})
 	]
 });

@@ -1,20 +1,20 @@
 <script lang="ts">
-	import type { WithElementRef } from '$lib/ui';
-	import { cn } from '$lib/ui';
 	import type { HTMLAttributes } from 'svelte/elements';
 
+	import type { WithElementRef } from '$lib/ui';
+
+	import { cn } from '$lib/ui';
+
 	let {
-		ref = $bindable(null),
-		class: className,
 		children,
+		class: className,
+		ref = $bindable(null),
 		...props
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 </script>
 
 <div
 	bind:this={ref}
-	data-slot="input-group"
-	role="group"
 	class={cn(
 		'group/input-group relative flex w-full items-center rounded-md border border-input shadow-xs transition-[color,box-shadow] outline-none dark:bg-input/30',
 		'h-9 has-[>textarea]:h-auto',
@@ -33,6 +33,8 @@
 
 		className
 	)}
+	data-slot="input-group"
+	role="group"
 	{...props}
 >
 	{@render children?.()}

@@ -38,6 +38,7 @@
 		"runed": "^0.35.1",
 		"svelte": "^5.41.0",
 		"svelte-check": "^4.3.3",
+		"svelte-sonner": "^1.0.5",
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.14",
 		"tailwindcss-view-transitions": "^0.1.1",

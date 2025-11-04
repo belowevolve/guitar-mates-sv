@@ -1,17 +1,18 @@
 <script lang="ts">
-	import PencilIcon from '@lucide/svelte/icons/pencil';
+	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SearchIcon from '@lucide/svelte/icons/search';
 	import SettingsIcon from '@lucide/svelte/icons/settings';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { fly } from 'svelte/transition';
 
+	import ActionBar from '$lib/components/action-bar.svelte';
 	import { Button } from '$lib/ui/button';
 	import * as InputGroup from '$lib/ui/input-group';
 
 	let { isEmptyResults, q = $bindable('') }: { isEmptyResults: boolean; q: string } = $props();
 </script>
 
-<footer class="fixed inset-x-0 bottom-2 containter-mobile flex gap-1 shadow-2xl">
+<ActionBar>
 	<InputGroup.Root class="bg-input/30">
 		<InputGroup.Input
 			name="q"
@@ -39,9 +40,9 @@
 		size="icon"
 		variant={isEmptyResults ? 'default' : 'outline'}
 	>
-		<PencilIcon />
+		<PlusIcon />
 	</Button>
 	<Button class="bg-input/30" href="/settings" size="icon" variant="outline">
 		<SettingsIcon />
 	</Button>
-</footer>
+</ActionBar>

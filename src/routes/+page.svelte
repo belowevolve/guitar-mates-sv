@@ -1,18 +1,25 @@
 <script lang="ts">
-	import { invalidateAll, replaceState } from '$app/navigation';
+	import { replaceState } from '$app/navigation';
 	import { Debounced } from 'runed';
 
-	import Empty from './_ui/empty.svelte';
-	import Footer from './_ui/footer.svelte';
-	import SongCard from './_ui/song-card.svelte';
-
-	import { db, deleteSong } from '$lib/db';
+	import { db } from '$lib/db';
 	import { liveQ } from '$lib/db/index.svelte';
+
+	import ActionBar from './_ui/action-bar.svelte';
+	import Empty from './_ui/empty.svelte';
+	import Header from './_ui/header.svelte';
+	import SongCard from './_ui/song-card.svelte';
 
 	let { data } = $props();
 
 	let q = $state(data.query);
 	const debouncedQ = new Debounced(() => q);
+	$effect(() => {
+		if (debouncedQ.current === data.query) return;
+		replaceState(debouncedQ.current ? `?q=${encodeURIComponent(debouncedQ.current)}` : '/', {
+			keepFocus: true
+		});
+	});
 
 	const songs = liveQ(
 		() => db.songs.where('title').startsWithIgnoreCase(debouncedQ.current).toArray(),
@@ -21,26 +28,17 @@
 			initialValue: data.songs
 		}
 	);
-
-	$effect(() => {
-		if (debouncedQ.current === data.query) return;
-		replaceState(debouncedQ.current ? `?q=${encodeURIComponent(debouncedQ.current)}` : '/', {
-			keepFocus: true
-		});
-	});
-
-	async function handleDeleteSong(id: string) {
-		await deleteSong(id);
-		invalidateAll();
-	}
 </script>
 
-<main class="mb-16 flex flex-col gap-2">
-	{#each songs.current as song (song.id)}
-		<SongCard {handleDeleteSong} {song} />
-	{:else}
-		<Empty />
-	{/each}
-</main>
+{#if !songs.current?.length}
+	<Empty />
+{:else}
+	<Header />
+	<div class="containter-mobile mt-2 flex flex-col gap-2">
+		{#each songs.current as song (song.id)}
+			<SongCard {song} />
+		{/each}
+	</div>
+{/if}
 
-<Footer isEmptyResults={!songs.current?.length} bind:q />
+<ActionBar isEmptyResults={!songs.current?.length} bind:q />

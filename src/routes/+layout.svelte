@@ -5,6 +5,7 @@
 	import { pwaInfo } from 'virtual:pwa-info';
 
 	import favicon from '$lib/assets/favicon.svg';
+	import { Toaster } from '$lib/ui/sonner';
 	import ViewTransitions from '$lib/ui/view-transitions.svelte';
 
 	onMount(async () => {
@@ -36,8 +37,9 @@
 	{@html webManifest}
 </svelte:head>
 
+<Toaster />
 <ViewTransitions />
 <ModeWatcher />
-<div class="containter-mobile min-h-dvh">
+<main class="mb-16">
 	{@render children()}
-</div>
+</main>

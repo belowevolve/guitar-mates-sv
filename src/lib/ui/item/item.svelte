@@ -10,9 +10,10 @@
 		variants: {
 			size: {
 				default: 'gap-4 p-4',
-				sm: 'gap-2.5 px-4 py-3'
+				sm: 'gap-2.5 p-2.5'
 			},
 			variant: {
+				card: 'bg-card border-border text-card-foreground shadow-sm',
 				default: 'bg-transparent',
 				muted: 'bg-muted/50',
 				outline: 'border-border'

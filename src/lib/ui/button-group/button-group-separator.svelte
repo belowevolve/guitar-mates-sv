@@ -6,15 +6,16 @@
 
 	let {
 		class: className,
+		orientation = 'vertical',
 		ref = $bindable(null),
 		...restProps
 	}: ComponentProps<typeof Separator> = $props();
 </script>
 
 <Separator
-	class={cn('my-0', className)}
-	data-slot="item-separator"
-	orientation="horizontal"
+	class={cn('relative !m-0 self-stretch bg-input data-[orientation=vertical]:h-auto', className)}
+	data-slot="button-group-separator"
+	{orientation}
 	bind:ref
 	{...restProps}
 />

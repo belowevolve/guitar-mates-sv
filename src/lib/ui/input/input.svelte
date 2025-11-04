@@ -8,7 +8,7 @@
 	type InputType = Exclude<HTMLInputTypeAttribute, 'file'>;
 
 	type Props = WithElementRef<
-		({ files?: FileList; type: 'file'; } | { files?: undefined; type?: InputType; }) &
+		({ files?: FileList; type: 'file' } | { files?: undefined; type?: InputType }) &
 			Omit<HTMLInputAttributes, 'type'>
 	>;
 

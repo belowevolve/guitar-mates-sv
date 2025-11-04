@@ -1,9 +1,7 @@
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	import type { WithElementRef } from '$lib/ui';
-
-	import { cn } from '$lib/ui';
+	import { cn, type WithElementRef } from '$lib/ui';
 
 	let {
 		children,
@@ -15,8 +13,11 @@
 
 <div
 	bind:this={ref}
-	class={cn('flex items-center gap-2 text-sm leading-snug font-medium', className)}
-	data-slot="item-title"
+	class={cn(
+		'flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50',
+		className
+	)}
+	data-slot="field-title"
 	{...restProps}
 >
 	{@render children?.()}

@@ -20,7 +20,6 @@ export function liveQ<T>(
 	});
 	$effect(() => {
 		dependencies?.();
-		console.log('dependencies', dependencies());
 		return liveQuery(querier).subscribe((result) => {
 			if (result !== undefined) {
 				query.current = result;

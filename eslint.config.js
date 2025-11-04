@@ -34,6 +34,8 @@ export default defineConfig(
 					groups: [
 						'type-import',
 						['value-builtin', 'value-external'],
+						'type-internal',
+						'value-internal',
 						[
 							'type-parent',
 							'type-sibling',
@@ -42,8 +44,6 @@ export default defineConfig(
 							'value-sibling',
 							'value-index'
 						],
-						'type-internal',
-						'value-internal',
 						'ts-equals-import',
 						'unknown'
 					],

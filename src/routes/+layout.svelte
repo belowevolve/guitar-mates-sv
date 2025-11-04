@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { ModeWatcher } from 'mode-watcher';
 	import { onMount } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
 
@@ -36,6 +37,7 @@
 </svelte:head>
 
 <ViewTransitions />
-<div class="containter-mobile">
+<ModeWatcher />
+<div class="containter-mobile min-h-dvh">
 	{@render children()}
 </div>

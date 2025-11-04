@@ -5,12 +5,9 @@
 
 	import { cn } from '$lib/ui';
 
-	let {
-		children,
-		class: className,
-		ref = $bindable(null),
-		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+	export type CardProps = WithElementRef<HTMLAttributes<HTMLDivElement>>;
+
+	let { children, class: className, ref = $bindable(null), ...restProps }: CardProps = $props();
 </script>
 
 <div

@@ -1,32 +1,33 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
-	import { fade, fly } from 'svelte/transition';
+	import { invalidateAll, replaceState } from '$app/navigation';
+	import { Debounced } from 'runed';
 
-	import Footer from './footer.svelte';
+	import Empty from './_ui/empty.svelte';
+	import Footer from './_ui/footer.svelte';
+	import SongCard from './_ui/song-card.svelte';
 
-	import { addSong, deleteSong } from '$lib/db';
-	import { Button } from '$lib/ui/button';
-	import * as Card from '$lib/ui/card';
+	import { db, deleteSong } from '$lib/db';
+	import { liveQ } from '$lib/db/index.svelte';
 
 	let { data } = $props();
 
 	let q = $state(data.query);
+	const debouncedQ = new Debounced(() => q);
+
+	const songs = liveQ(
+		() => db.songs.where('title').startsWithIgnoreCase(debouncedQ.current).toArray(),
+		() => [debouncedQ.current],
+		{
+			initialValue: data.songs
+		}
+	);
 
 	$effect(() => {
-		if (q === data.query) return;
-		let timer = setTimeout(() => {
-			goto(q ? `?q=${encodeURIComponent(q)}` : '/', {
-				keepFocus: true,
-				replaceState: true
-			});
-		}, 250);
-		return () => clearTimeout(timer);
+		if (debouncedQ.current === data.query) return;
+		replaceState(debouncedQ.current ? `?q=${encodeURIComponent(debouncedQ.current)}` : '/', {
+			keepFocus: true
+		});
 	});
-
-	async function handleAddSong(title: string, lyrics: string) {
-		await addSong({ lyrics, title });
-		invalidateAll();
-	}
 
 	async function handleDeleteSong(id: string) {
 		await deleteSong(id);
@@ -34,39 +35,12 @@
 	}
 </script>
 
-<form
-	method="POST"
-	onsubmit={(e) => {
-		e.preventDefault();
-		const formData = new FormData(e.currentTarget, e.submitter);
-		const title = formData.get('title') as string;
-		const lyrics = formData.get('lyrics') as string;
-		handleAddSong(title, lyrics);
-	}}
->
-	<input name="title" placeholder="Title" type="text" />
-	<input name="lyrics" placeholder="Lyrics" type="text" />
-	<Button type="submit">Add Song</Button>
-</form>
-<main class="mb-16">
-	{#each data.songs as song (song.id)}
-		<div in:fade={{ duration: 100 }} out:fly={{ x: -100 }}>
-			<Card.Root>
-				<Card.Header>
-					<a href={`/offline-song?id=${song.id}`}>
-						<Card.Title style="view-transition-name: song-title-{song.id};">{song.title}</Card.Title
-						>
-					</a>
-				</Card.Header>
-
-				{#if song.lyrics}
-					<div style="margin-top: 0.5em; color: #666;">
-						{song.lyrics}
-					</div>
-				{/if}
-				<Button onclick={() => handleDeleteSong(song.id)} variant="destructive">Delete</Button>
-			</Card.Root>
-		</div>
+<main class="mb-16 flex flex-col gap-2">
+	{#each songs.current as song (song.id)}
+		<SongCard {handleDeleteSong} {song} />
+	{:else}
+		<Empty />
 	{/each}
 </main>
-<Footer {q} />
+
+<Footer isEmptyResults={!songs.current?.length} bind:q />

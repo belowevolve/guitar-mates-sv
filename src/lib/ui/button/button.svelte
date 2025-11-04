@@ -37,11 +37,11 @@
 	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
 
 	export type ButtonProps = {
-			external?: boolean;
-			size?: ButtonSize;
-			variant?: ButtonVariant;
-		} &
-		WithElementRef<HTMLAnchorAttributes> & WithElementRef<HTMLButtonAttributes>;
+		external?: boolean;
+		size?: ButtonSize;
+		variant?: ButtonVariant;
+	} & WithElementRef<HTMLAnchorAttributes> &
+		WithElementRef<HTMLButtonAttributes>;
 </script>
 
 <script lang="ts">

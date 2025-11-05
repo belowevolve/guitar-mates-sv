@@ -27,7 +27,7 @@
 	{#each songs as song (song.id)}
 		<SongCard {song} />
 	{:else}
-		<Empty />
+		<Empty {q} />
 	{/each}
 </Container>
 

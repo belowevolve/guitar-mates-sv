@@ -4,6 +4,8 @@
 
 	import { Button } from '$lib/ui/button';
 	import * as Empty from '$lib/ui/empty';
+
+	let { q }: { q: string } = $props();
 </script>
 
 <Empty.Root class="border-t border-solid bg-linear-to-b from-muted/50 from-30% to-background">
@@ -15,7 +17,7 @@
 		<Empty.Description>Create a new song to get started</Empty.Description>
 	</Empty.Header>
 	<Empty.Content>
-		<Button href="/create" size="sm" variant="outline">
+		<Button href={`/create#${encodeURIComponent(q)}`} size="sm" variant="outline">
 			<PlusIcon />
 			Create Song
 		</Button>

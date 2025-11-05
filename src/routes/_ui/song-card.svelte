@@ -16,7 +16,7 @@
 			</Item.Media>
 			<Item.Content>
 				<Item.Title style="view-transition-name: song-title-{song.id};">{song.title}</Item.Title>
-				<Item.Description>{song.createdAt.toLocaleDateString()}</Item.Description>
+				<Item.Description class="line-clamp-1">{song.lyrics}</Item.Description>
 			</Item.Content>
 		</a>
 	{/snippet}

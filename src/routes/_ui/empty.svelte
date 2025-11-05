@@ -6,7 +6,7 @@
 	import * as Empty from '$lib/ui/empty';
 </script>
 
-<Empty.Root class="rounded-none bg-linear-to-b from-muted/50 from-30% to-background">
+<Empty.Root class="border-t border-solid bg-linear-to-b from-muted/50 from-30% to-background">
 	<Empty.Header>
 		<Empty.Media variant="icon">
 			<MusicIcon />

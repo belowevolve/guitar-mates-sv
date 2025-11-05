@@ -5,13 +5,15 @@
 	import { toast } from 'svelte-sonner';
 
 	import ActionBar from '$lib/components/action-bar.svelte';
-	import BackButton from '$lib/components/back-button.svelte';
+	import Container from '$lib/components/container.svelte';
 	import { addSong } from '$lib/db';
 	import { Button } from '$lib/ui/button';
 	import * as ButtonGroup from '$lib/ui/button-group';
 	import * as Field from '$lib/ui/field';
 	import * as InputGroup from '$lib/ui/input-group';
 	import { Textarea } from '$lib/ui/textarea';
+
+	import Header from './_ui/header.svelte';
 
 	async function handleAddSong(title: string, lyrics: string) {
 		await addSong({ lyrics, title });
@@ -22,7 +24,8 @@
 	let lyrics = $state('');
 </script>
 
-<main class="containter-mobile">
+<Header />
+<Container>
 	<form
 		method="POST"
 		onsubmit={(e) => {
@@ -32,11 +35,6 @@
 	>
 		<Field.Group>
 			<Field.Set>
-				<Field.Legend class="flex w-full items-center gap-2">
-					<BackButton />
-					Song tabs
-				</Field.Legend>
-
 				<Field.Group>
 					<Field.Field>
 						<Field.Label for="title">Song title</Field.Label>
@@ -64,7 +62,7 @@
 					</Field.Field>
 					<Field.Field>
 						<Field.Label for="lyrics">Lyrics</Field.Label>
-						<Textarea id="lyrics" placeholder="Lyrics" required />
+						<Textarea id="lyrics" placeholder="Lyrics" required bind:value={lyrics} />
 					</Field.Field>
 				</Field.Group>
 			</Field.Set>
@@ -73,4 +71,4 @@
 			</ActionBar>
 		</Field.Group>
 	</form>
-</main>
+</Container>

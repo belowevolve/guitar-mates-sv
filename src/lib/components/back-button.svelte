@@ -6,7 +6,7 @@
 	let { children, ...props }: ButtonProps = $props();
 </script>
 
-<Button onclick={() => history.back()} size="icon" variant="outline" {...props}>
+<Button onclick={() => history.back()} size="icon-sm" variant="outline" {...props}>
 	{#if children}
 		{@render children()}
 	{:else}

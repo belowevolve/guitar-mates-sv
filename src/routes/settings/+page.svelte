@@ -4,10 +4,27 @@
 	import { toggleMode } from 'mode-watcher';
 
 	import { Button } from '$lib/ui/button';
+	import * as Field from '$lib/ui/field';
+
+	import Header from './_ui/header.svelte';
 </script>
 
-<Button onclick={toggleMode} size="icon" variant="outline">
-	<SunIcon class=" scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-	<MoonIcon class="absolute  scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-	<span class="sr-only">Toggle theme</span>
-</Button>
+<Header />
+<div class="container-mobile mt-2">
+	<Field.Group>
+		<Field.Set>
+			<Field.Group>
+				<Field.Field orientation="horizontal">
+					<Field.Label>Theme</Field.Label>
+					<Button onclick={toggleMode} size="icon" variant="outline">
+						<SunIcon class=" scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+						<MoonIcon
+							class="absolute  scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+						/>
+						<span class="sr-only">Toggle theme</span>
+					</Button>
+				</Field.Field>
+			</Field.Group>
+		</Field.Set>
+	</Field.Group>
+</div>

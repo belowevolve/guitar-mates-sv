@@ -4,10 +4,6 @@
 	let { children, class: className, ref = $bindable(null), ...restProps }: DivProps = $props();
 </script>
 
-<div
-	bind:this={ref}
-	class={cn('fixed inset-x-0 bottom-2 container-mobile flex gap-1', className)}
-	{...restProps}
->
+<div bind:this={ref} class={cn('container-mobile mt-2', className)} {...restProps}>
 	{@render children?.()}
 </div>

@@ -128,7 +128,7 @@
 	}
 }
 
-@utility containter-mobile {
+@utility container-mobile {
 	@apply mx-auto max-w-mobile-md px-2;
 }
 

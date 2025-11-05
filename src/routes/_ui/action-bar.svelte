@@ -36,7 +36,7 @@
 	</InputGroup.Root>
 	<Button
 		class={{ 'bg-input/30': !isEmptyResults }}
-		href={`/create${isEmptyResults ? `?title=${q}` : ''}`}
+		href={`/create${isEmptyResults ? `#${q}` : ''}`}
 		size="icon"
 		variant={isEmptyResults ? 'default' : 'outline'}
 	>

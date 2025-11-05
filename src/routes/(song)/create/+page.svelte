@@ -20,7 +20,7 @@
 		goto('/');
 	}
 
-	let title = $state(page.url.searchParams.get('title') || '');
+	let title = $state(page.url.hash.split('#')[1] || '');
 	let lyrics = $state('');
 </script>
 

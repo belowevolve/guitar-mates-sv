@@ -44,7 +44,7 @@
 							</InputGroup.Root>
 							<Button
 								onclick={() => {
-									toast.info('Will be implemented soon...');
+									toast.info('Will be eventually implemented...');
 									// const response = await searchLyrics(
 									//   encodeURIComponent(songTitle)
 									// );

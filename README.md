@@ -30,9 +30,27 @@ npm run dev -- --open
 To create a production version of your app:
 
 ```sh
-npm run build
+pnpm build
 ```
 
-You can preview the production build with `npm run preview`.
+You can preview the production build with `pnpm preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Deployment
+
+This project is configured for static deployment using `@sveltejs/adapter-static` and can be deployed via nginx.
+
+### Quick Start
+
+See [QUICK_START.md](./QUICK_START.md) for a quick deployment guide.
+
+### Detailed Instructions
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions.
+
+### Nginx Configuration
+
+Example nginx configuration is available in [nginx.conf.example](./nginx.conf.example).
+
+### Learning Plan
+
+For nginx study plan and homework tasks, see [NGINX_STUDY_PLAN.md](./NGINX_STUDY_PLAN.md).

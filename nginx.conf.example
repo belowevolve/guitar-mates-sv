@@ -1,0 +1,233 @@
+# Пример конфигурации nginx для проекта guitar-mates-sv
+# Этот файл демонстрирует различные виды location и настройки для деплоя
+
+# Основной конфигурационный файл nginx обычно находится в /etc/nginx/nginx.conf
+# Этот пример можно использовать как server block в /etc/nginx/sites-available/guitar-mates-sv
+
+# ============================================================================
+# ОСНОВНЫЕ НАСТРОЙКИ
+# ============================================================================
+
+# Увеличиваем лимит размера тела запроса (для загрузки файлов)
+client_max_body_size 10M;
+
+# Отключаем server_tokens для безопасности (скрывает версию nginx)
+server_tokens off;
+
+# Настройки таймаутов
+keepalive_timeout 65;
+keepalive_requests 100;
+
+# Настройки буферизации для прокси
+proxy_buffering on;
+proxy_buffer_size 4k;
+proxy_buffers 8 4k;
+proxy_busy_buffers_size 8k;
+
+# ============================================================================
+# СЕРВЕР БЛОК
+# ============================================================================
+
+server {
+    # Порт и имя сервера
+    listen 80;
+    # listen [::]:80; # Для IPv6
+    server_name localhost; # Замените на ваш домен
+    
+    # Корневая директория для статических файлов
+    # После сборки проекта файлы будут в директории build/
+    root /var/www/guitar-mates-sv/build;
+    index index.html;
+
+    # Логирование
+    access_log /var/log/nginx/guitar-mates-access.log;
+    error_log /var/log/nginx/guitar-mates-error.log warn;
+
+    # Кодировка по умолчанию
+    charset utf-8;
+
+    # ========================================================================
+    # РАЗЛИЧНЫЕ ВИДЫ LOCATION - ДЕМОНСТРАЦИЯ ПРИОРИТЕТОВ
+    # ========================================================================
+
+    # 1. ТОЧНОЕ СОВПАДЕНИЕ (высший приоритет)
+    # Срабатывает только для точного пути /static/exact
+    location = /static/exact {
+        return 200 "Exact match location\n";
+        add_header Content-Type text/plain;
+    }
+
+    # 2. ПРЕФИКС С ПРИОРИТЕТОМ (второй по приоритету)
+    # Срабатывает для всех путей, начинающихся с /static/priority
+    # Игнорирует регулярные выражения
+    location ^~ /static/priority {
+        alias /var/www/guitar-mates-sv/build/static;
+        # try_files $uri $uri/ =404;
+    }
+
+    # 3. РЕГУЛЯРНОЕ ВЫРАЖЕНИЕ (чувствительное к регистру)
+    # Срабатывает для файлов с расширениями jpg, png, gif
+    location ~ \.(jpg|jpeg|png|gif|ico|svg)$ {
+        root /var/www/guitar-mates-sv/build;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        access_log off; # Отключаем логирование для статики
+    }
+
+    # 4. РЕГУЛЯРНОЕ ВЫРАЖЕНИЕ (нечувствительное к регистру)
+    # Срабатывает для CSS и JS файлов в любом регистре
+    location ~* \.(css|js)$ {
+        root /var/www/guitar-mates-sv/build;
+        expires 7d;
+        add_header Cache-Control "public";
+        # Сжатие для текстовых файлов
+        gzip_static on;
+    }
+
+    # 5. ОБЫЧНЫЙ ПРЕФИКС (низший приоритет среди префиксов)
+    # Раздача статических файлов из директории /static
+    # Примечание: В SvelteKit статические файлы обычно находятся в _app/immutable/
+    # Этот блок можно использовать для дополнительных статических ресурсов
+    location /static {
+        alias /var/www/guitar-mates-sv/build/static;
+        # Используем try_files для обработки несуществующих файлов
+        try_files $uri $uri/ =404;
+        
+        # Кэширование статических файлов
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        
+        # Отключаем логирование для статики (опционально)
+        access_log off;
+    }
+
+    # Раздача статических ресурсов из _app (JS, CSS, изображения)
+    location /_app {
+        root /var/www/guitar-mates-sv/build;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # ========================================================================
+    # ПРОКСИРОВАНИЕ НА API
+    # ========================================================================
+
+    # Проксирование запросов к GitHub API
+    location /api {
+        # Удаляем /api из пути перед проксированием
+        rewrite ^/api/(.*) /$1 break;
+        
+        # Проксирование на GitHub API
+        proxy_pass https://api.github.com;
+        
+        # Настройка заголовков для проксирования
+        proxy_set_header Host api.github.com;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        
+        # Настройки таймаутов
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+        
+        # Отключаем буферизацию для streaming (если нужно)
+        # proxy_buffering off;
+        
+        # Игнорируем некоторые заголовки от upstream
+        proxy_ignore_headers "X-Accel-Redirect" "X-Accel-Expires" "X-Accel-Limit-Rate" "X-Accel-Buffering";
+    }
+
+    # Альтернативный пример: проксирование на другой API без перезаписи пути
+    # location /api/v2 {
+    #     proxy_pass http://localhost:3000;
+    #     # В этом случае /api/v2 будет передано как есть
+    # }
+
+    # ========================================================================
+    # ОБРАБОТКА SPA (Single Page Application)
+    # ========================================================================
+
+    # Для SvelteKit в режиме SPA все запросы должны возвращать index.html
+    # Это нужно для client-side routing
+    location / {
+        try_files $uri $uri/ /index.html;
+        
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    }
+
+    # ========================================================================
+    # ОБРАБОТКА ОШИБОК
+    # ========================================================================
+
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+    
+    location = /50x.html {
+        root /var/www/guitar-mates-sv/build;
+    }
+
+    # ========================================================================
+    # ЗАПРЕТ ДОСТУПА К СКРЫТЫМ ФАЙЛАМ
+    # ========================================================================
+
+    # Запрещаем доступ к файлам, начинающимся с точки
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # Запрещаем доступ к служебным файлам
+    location ~ /\.(git|svn|htaccess|htpasswd) {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+}
+
+# ============================================================================
+# HTTPS КОНФИГУРАЦИЯ (опционально, для продакшена)
+# ============================================================================
+
+# server {
+#     listen 443 ssl http2;
+#     listen [::]:443 ssl http2;
+#     server_name your-domain.com;
+# 
+#     # SSL сертификаты (Let's Encrypt)
+#     ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+# 
+#     # SSL настройки
+#     ssl_protocols TLSv1.2 TLSv1.3;
+#     ssl_ciphers HIGH:!aNULL:!MD5;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 10m;
+# 
+#     # OCSP stapling
+#     ssl_stapling on;
+#     ssl_stapling_verify on;
+# 
+#     # Остальные настройки такие же, как в HTTP блоке
+#     root /var/www/guitar-mates-sv/build;
+#     index index.html;
+# 
+#     # ... (скопируйте остальные location блоки)
+# }
+# 
+# # Редирект с HTTP на HTTPS
+# server {
+#     listen 80;
+#     listen [::]:80;
+#     server_name your-domain.com;
+#     return 301 https://$server_name$request_uri;
+# }
+
